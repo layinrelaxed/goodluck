@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Удачи!</title>
+  <style>
+    :root {
+      --page: #fbf7f0;
+      --panel: rgba(255, 255, 255, 0.86);
+      --ink: #292622;
+      --muted: #756d64;
+      --line: rgba(41, 38, 34, 0.13);
+      --accent: #963f45;
+      --accent-dark: #733037;
+      --green: #66745f;
+      --gold: #bc9148;
+      --shadow: 0 18px 55px rgba(41, 38, 34, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(90deg, rgba(102, 116, 95, 0.07) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(102, 116, 95, 0.07) 1px, transparent 1px),
+        radial-gradient(circle at 15% 0%, rgba(188, 145, 72, 0.18), transparent 30rem),
+        radial-gradient(circle at 96% 20%, rgba(150, 63, 69, 0.13), transparent 30rem),
+        var(--page);
+      background-size: 42px 42px, 42px 42px, auto, auto, auto;
+    }
+
+    button,
+    a,
+    input {
+      font: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(41, 38, 34, 0.1);
+      background: rgba(251, 247, 240, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid rgba(150, 63, 69, 0.22);
+      border-radius: 50%;
+      color: var(--accent-dark);
+      background: rgba(255, 255, 255, 0.68);
+      font: 700 18px/1 Georgia, "Times New Roman", serif;
+    }
+
+    .brand h1 {
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: clamp(18px, 2.2vw, 25px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .top-actions,
+    .video-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .icon-button,
+    .text-button,
+    .primary-button {
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, color 150ms ease;
+    }
+
+    .icon-button {
+      width: 40px;
+      padding: 0;
+      border: 1px solid rgba(41, 38, 34, 0.14);
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .text-button {
+      padding: 0 13px;
+      border: 1px solid rgba(41, 38, 34, 0.14);
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .primary-button {
+      padding: 0 15px;
+      border: 1px solid rgba(115, 48, 55, 0.76);
+      color: #fff;
+      background: var(--accent-dark);
+      box-shadow: 0 12px 24px rgba(115, 48, 55, 0.18);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .icon-button:hover,
+    .text-button:hover,
+    .primary-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .icon-button:hover,
+    .text-button:hover {
+      border-color: rgba(150, 63, 69, 0.32);
+      color: var(--accent-dark);
+      background: #fff;
+    }
+
+    .primary-button:hover {
+      background: #612831;
+    }
+
+    .icon-button:focus-visible,
+    .text-button:focus-visible,
+    .primary-button:focus-visible,
+    .video-card:focus-visible,
+    .search input:focus-visible {
+      outline: 3px solid rgba(188, 145, 72, 0.38);
+      outline-offset: 3px;
+    }
+
+    .icon {
+      width: 19px;
+      height: 19px;
+      flex: 0 0 auto;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    main {
+      padding: 24px 0 44px;
+    }
+
+    .player-card {
+      overflow: hidden;
+      border: 1px solid rgba(41, 38, 34, 0.12);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .player-frame {
+      position: relative;
+      min-height: 210px;
+      aspect-ratio: 16 / 9;
+      background:
+        linear-gradient(135deg, rgba(41, 38, 34, 0.94), rgba(82, 74, 64, 0.86)),
+        #25221f;
+    }
+
+    .player-frame video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #1f1d1b;
+      object-fit: contain;
+    }
+
+    .player-info {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 17px;
+      border-top: 1px solid rgba(41, 38, 34, 0.1);
+    }
+
+    .current-kicker {
+      margin: 0 0 6px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .current-title {
+      margin: 0;
+      overflow-wrap: anywhere;
+      font-size: clamp(23px, 3.1vw, 38px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .picker {
+      margin-top: 22px;
+    }
+
+    .picker-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 270px;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .picker-title {
+      min-width: 0;
+    }
+
+    .picker-title h2 {
+      margin: 0;
+      font-size: clamp(21px, 2.5vw, 28px);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .search {
+      position: relative;
+    }
+
+    .search .icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      color: var(--muted);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .search input {
+      width: 100%;
+      height: 42px;
+      padding: 0 13px 0 40px;
+      border: 1px solid rgba(41, 38, 34, 0.14);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 8px 26px rgba(41, 38, 34, 0.06);
+    }
+
+    .search input::placeholder {
+      color: rgba(117, 109, 100, 0.86);
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .video-card {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+      border: 1px solid rgba(41, 38, 34, 0.11);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.74);
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 10px 32px rgba(41, 38, 34, 0.08);
+      transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(150, 63, 69, 0.3);
+      background: #fff;
+      box-shadow: 0 16px 42px rgba(41, 38, 34, 0.12);
+    }
+
+    .video-card.is-active {
+      border-color: rgba(150, 63, 69, 0.72);
+      background: rgba(150, 63, 69, 0.08);
+      box-shadow: inset 0 0 0 2px rgba(150, 63, 69, 0.1), 0 16px 42px rgba(41, 38, 34, 0.12);
+    }
+
+    .thumb {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(41, 38, 34, 0.2), rgba(41, 38, 34, 0.52)),
+        linear-gradient(135deg, var(--green), var(--accent), var(--gold));
+    }
+
+    .thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      background: #2b2925;
+      z-index: 1;
+    }
+
+    .thumb-fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: rgba(255, 255, 255, 0.92);
+      font: 850 30px/1 Georgia, "Times New Roman", serif;
+      z-index: 0;
+    }
+
+    .play-badge {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: rgba(41, 38, 34, 0.76);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+      z-index: 2;
+    }
+
+    .number {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      min-width: 32px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(41, 38, 34, 0.72);
+      font-size: 12px;
+      font-weight: 850;
+      z-index: 2;
+    }
+
+    .card-body {
+      min-width: 0;
+      padding: 11px;
+    }
+
+    .card-title {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+      line-height: 1.28;
+      font-weight: 850;
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .mini-link {
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 8px;
+      border: 1px solid rgba(41, 38, 34, 0.12);
+      border-radius: 7px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.62);
+      appearance: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 850;
+      transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+    }
+
+    .mini-link:hover {
+      border-color: rgba(150, 63, 69, 0.32);
+      color: var(--accent-dark);
+      background: #fff;
+    }
+
+    .mini-link .icon {
+      width: 15px;
+      height: 15px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .empty-state {
+      display: none;
+      padding: 22px;
+      border: 1px dashed rgba(41, 38, 34, 0.2);
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.62);
+      text-align: center;
+      font-weight: 750;
+    }
+
+    .empty-state.is-visible {
+      display: block;
+    }
+
+    @media (max-width: 1020px) {
+      .video-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100% - 22px, 1160px);
+      }
+
+      .topbar-inner {
+        min-height: 60px;
+      }
+
+      .mark {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+      }
+
+      .brand h1 {
+        max-width: 180px;
+        font-size: 17px;
+      }
+
+      .brand p,
+      .desktop-label {
+        display: none;
+      }
+
+      main {
+        padding-top: 14px;
+      }
+
+      .player-card {
+        margin-left: -11px;
+        width: calc(100% + 22px);
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+      }
+
+      .player-frame {
+        min-height: 205px;
+      }
+
+      .player-info {
+        grid-template-columns: 1fr;
+        padding: 14px 11px;
+      }
+
+      .video-actions {
+        justify-content: stretch;
+      }
+
+      .primary-button,
+      .video-actions .text-button {
+        flex: 1 1 0;
+      }
+
+      .picker {
+        margin-top: 18px;
+      }
+
+      .picker-head {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .video-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+      }
+
+      .card-body {
+        padding: 9px;
+      }
+
+      .card-title {
+        min-height: 36px;
+        font-size: 13px;
+      }
+
+      .card-actions {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .mini-link {
+        height: 31px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .top-actions {
+        gap: 6px;
+      }
+
+      .icon-button {
+        width: 38px;
+        height: 38px;
+      }
+
+      .text-button {
+        height: 38px;
+        padding: 0 10px;
+      }
+
+      .current-title {
+        font-size: 22px;
+      }
+
+      .video-grid {
+        gap: 8px;
+      }
+
+      .play-badge {
+        width: 30px;
+        height: 30px;
+      }
+
+      .thumb-fallback {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">
+        <div class="mark">♡</div>
+        <div>
+          <h1>Удачи!</h1>
+          <p id="headerCount">17 роликов</p>
+        </div>
+      </div>
+      <nav class="top-actions" aria-label="Навигация по видео">
+        <button class="icon-button" type="button" id="prevVideo" title="Предыдущее видео" aria-label="Предыдущее видео">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+        </button>
+        <button class="icon-button" type="button" id="nextVideo" title="Следующее видео" aria-label="Следующее видео">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </button>
+        <a class="text-button" id="topDownload" href="#" title="Скачать текущее видео">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+          <span class="desktop-label">Скачать</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="player-card" aria-label="Текущее видео">
+      <div class="player-frame">
+        <video
+          id="player"
+          controls
+          playsinline
+          preload="metadata"
+          title="">
+          <source id="playerSource" src="" type="video/mp4">
+        </video>
+      </div>
+      <div class="player-info">
+        <div>
+          <p class="current-kicker" id="currentIndex">Видео 1 из 17</p>
+          <h2 class="current-title" id="currentTitle"></h2>
+        </div>
+        <div class="video-actions">
+          <a class="text-button" id="openDrive" href="#" target="_blank" rel="noopener">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+            Drive
+          </a>
+          <a class="text-button" id="downloadVideo" href="#">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+            Скачать
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="picker" aria-label="Выбор видео">
+      <div class="picker-head">
+        <div class="picker-title">
+          <h2>Выбор видео</h2>
+        </div>
+        <label class="search" for="videoSearch">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <input id="videoSearch" type="search" placeholder="Найти видео">
+        </label>
+      </div>
+      <div class="video-grid" id="videoGrid"></div>
+      <div class="empty-state" id="emptyState">Ничего не найдено</div>
+    </section>
+  </main>
+
+  <script>
+    const videos = [
+      { id: "11Ttw67iQcrCQqft8oUGNzX0X6UPy_vC6", title: "Горько", src: "videos/01-gorko.mp4" },
+      { id: "17NHlwnUJBrnbQMEUtWpZtnB8X_FS3jbs", title: "Горььько", src: "videos/02-gorko-2.mp4" },
+      { id: "1m2P61vMQ4NQvTJ9KMhUCtTxEedq-RMdo", title: "Данил и Повязка", src: "videos/03-danil-i-povyazka.mp4" },
+      { id: "1BX_xHWf6xNySOPBzprCW2GGfD8n-jJCA", title: "мама невесты", src: "videos/04-mama-nevesty.mp4" },
+      { id: "1JR-VllZ9SHQdUy2Guwpfls5I9WEntmpQ", title: "Наташа", src: "videos/05-natasha.mp4" },
+      { id: "1kUcZoZ2LeBj3afxCwlSl0kr-7ephFymy", title: "невеста и жених", src: "videos/06-nevesta-i-zhenih.mp4" },
+      { id: "1C53SDVXMoMyiod_WL2sgIS29NmX-jPDt", title: "Опять горько", src: "videos/07-opyat-gorko.mp4" },
+      { id: "13NI-7cbibUnsIYvn_Ujndx6q0X-lRMa4", title: "песня и танец", src: "videos/08-pesnya-i-tanec.mp4" },
+      { id: "1PZLnDKg975BhKPiYaipQ3ah_3Wtp4V-P", title: "Поздравление д.Леша", src: "videos/09-pozdravlenie-d-lesha.mp4" },
+      { id: "1kB4ZsetxrCBxOHgezIfW1M5hifhCLj4O", title: "Поздравление мама жениха", src: "videos/10-pozdravlenie-mama-zheniha.mp4" },
+      { id: "1PlH1zWYXg7EivOufzt9p6R5rsTlncb7l", title: "Поздравление мама невесты", src: "videos/11-pozdravlenie-mama-nevesty.mp4" },
+      { id: "10G0LdvqMGBy7ziOzNbhaWEWsDJlT4OXC", title: "Поздравление мелкий", src: "videos/12-pozdravlenie-melkiy.mp4" },
+      { id: "1VSxXhew1U5_cmvhindbKJIeDgOdvUHE-", title: "Рамилька", src: "videos/13-ramilka.mp4" },
+      { id: "1Ey7OFoBlpZN5NJAhOm9W85KGDLUmHgXi", title: "Ренат", src: "videos/14-renat.mp4" },
+      { id: "1ZdA9fIoBLMOAeqUXdmpzdR8qh5rak0-y", title: "Свадебный торт", src: "videos/15-svadebnyy-tort.mp4" },
+      { id: "1Us1llw4diJD6CzUOn43fYMXLELdSOSwp", title: "снова горько", src: "videos/16-snova-gorko.mp4" },
+      { id: "1SCYHze80b6qZ6sMvMI6AUMEnveaVa6pu", title: "Фалбстарт-Давай под первое", src: "videos/17-falstart-davay-pod-pervoe.mp4" }
+    ];
+
+    const player = document.querySelector("#player");
+    const currentIndex = document.querySelector("#currentIndex");
+    const currentTitle = document.querySelector("#currentTitle");
+    const videoGrid = document.querySelector("#videoGrid");
+    const emptyState = document.querySelector("#emptyState");
+    const openDrive = document.querySelector("#openDrive");
+    const downloadVideo = document.querySelector("#downloadVideo");
+    const topDownload = document.querySelector("#topDownload");
+    const prevVideo = document.querySelector("#prevVideo");
+    const nextVideo = document.querySelector("#nextVideo");
+    const videoSearch = document.querySelector("#videoSearch");
+    const headerCount = document.querySelector("#headerCount");
+    const playerSource = document.querySelector("#playerSource");
+
+    let activeIndex = 0;
+
+    function viewUrl(id) {
+      return `https://drive.google.com/file/d/${id}/view`;
+    }
+
+    function videoUrl(video) {
+      return video.src;
+    }
+
+    function downloadUrl(video) {
+      return video.src;
+    }
+
+    function thumbnailUrl(id) {
+      return `https://drive.google.com/thumbnail?id=${id}&sz=w640`;
+    }
+
+    function setActiveVideo(index, shouldScroll = false, shouldPlay = false) {
+      activeIndex = (index + videos.length) % videos.length;
+      const video = videos[activeIndex];
+
+      player.pause();
+      playerSource.src = videoUrl(video);
+      player.poster = thumbnailUrl(video.id);
+      player.title = video.title;
+      player.load();
+      currentIndex.textContent = `Видео ${activeIndex + 1} из ${videos.length}`;
+      currentTitle.textContent = video.title;
+      openDrive.href = viewUrl(video.id);
+      downloadVideo.href = downloadUrl(video);
+      downloadVideo.download = video.src.split("/").pop();
+      topDownload.href = downloadUrl(video);
+      topDownload.download = video.src.split("/").pop();
+
+      document.querySelectorAll(".video-card").forEach((card) => {
+        const isActive = Number(card.dataset.index) === activeIndex;
+        card.classList.toggle("is-active", isActive);
+        card.setAttribute("aria-current", isActive ? "true" : "false");
+      });
+
+      if (shouldScroll) {
+        document.querySelector(".player-card").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      if (shouldPlay) {
+        player.play().catch(() => {});
+      }
+    }
+
+    function makeIcon(paths) {
+      return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${paths}</svg>`;
+    }
+
+    function makeVideoCards() {
+      const fragment = document.createDocumentFragment();
+
+      videos.forEach((video, index) => {
+        const card = document.createElement("article");
+        card.className = "video-card";
+        card.dataset.index = String(index);
+
+        const thumb = document.createElement("div");
+        thumb.className = "thumb";
+
+        const img = document.createElement("img");
+        img.loading = "lazy";
+        img.alt = "";
+        img.src = thumbnailUrl(video.id);
+        img.addEventListener("error", () => {
+          img.remove();
+        }, { once: true });
+
+        const fallback = document.createElement("span");
+        fallback.className = "thumb-fallback";
+        fallback.textContent = String(index + 1).padStart(2, "0");
+
+        const number = document.createElement("span");
+        number.className = "number";
+        number.textContent = String(index + 1).padStart(2, "0");
+
+        const playBadge = document.createElement("span");
+        playBadge.className = "play-badge";
+        playBadge.innerHTML = makeIcon('<polygon points="9 7 17 12 9 17 9 7"></polygon>');
+
+        thumb.append(fallback, img, number, playBadge);
+
+        const body = document.createElement("div");
+        body.className = "card-body";
+
+        const title = document.createElement("div");
+        title.className = "card-title";
+        title.textContent = video.title;
+
+        const actions = document.createElement("div");
+        actions.className = "card-actions";
+        actions.innerHTML = `
+          <button class="mini-link watch-button" type="button" aria-label="Смотреть ${video.title}">
+            ${makeIcon('<polygon points="9 7 17 12 9 17 9 7"></polygon>')}
+            Смотреть
+          </button>
+          <a class="mini-link" href="${downloadUrl(video)}" download="${video.src.split("/").pop()}" aria-label="Скачать ${video.title}">
+            ${makeIcon('<path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path>')}
+            Скачать
+          </a>
+        `;
+
+        actions.querySelector(".watch-button").addEventListener("click", (event) => {
+          event.stopPropagation();
+          setActiveVideo(index, true, true);
+        });
+
+        card.addEventListener("click", (event) => {
+          if (event.target.closest("a, button")) return;
+          setActiveVideo(index, true, true);
+        });
+
+        card.addEventListener("keydown", (event) => {
+          if (event.target.closest("a, button")) return;
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          setActiveVideo(index, true, true);
+        });
+
+        body.append(title, actions);
+        card.append(thumb, body);
+        fragment.append(card);
+      });
+
+      videoGrid.append(fragment);
+    }
+
+    function filterVideos() {
+      const query = videoSearch.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      document.querySelectorAll(".video-card").forEach((card) => {
+        const video = videos[Number(card.dataset.index)];
+        const visible = video.title.toLowerCase().includes(query);
+        card.classList.toggle("hidden", !visible);
+        if (visible) visibleCount += 1;
+      });
+
+      emptyState.classList.toggle("is-visible", visibleCount === 0);
+    }
+
+    prevVideo.addEventListener("click", () => setActiveVideo(activeIndex - 1));
+    nextVideo.addEventListener("click", () => setActiveVideo(activeIndex + 1));
+    videoSearch.addEventListener("input", filterVideos);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target.closest("input, textarea, select, button, a")) return;
+      if (event.key === "ArrowLeft") setActiveVideo(activeIndex - 1);
+      if (event.key === "ArrowRight") setActiveVideo(activeIndex + 1);
+    });
+
+    headerCount.textContent = `${videos.length} роликов`;
+    makeVideoCards();
+    setActiveVideo(0);
+  </script>
+</body>
+</html>
